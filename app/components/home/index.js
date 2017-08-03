@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Platform } from 'react-native';
-import Toolbar from "../toolbar/index";
+import Toolbar from "../toolbar";
+import Campaigns  from '../campaigns';
 
 import {
   Container,
@@ -33,17 +34,8 @@ export default class Home extends Component {
       <Container>
         <Toolbar {...this.props} />
         <Content padder>
-          <Text>
-            Content goes here
-          </Text>
+          <Campaigns {...this.props} />
         </Content>
-        <Footer>
-          <FooterTab>
-            <Button active full>
-              <Text>Footer</Text>
-            </Button>
-          </FooterTab>
-        </Footer>
       </Container>
     );
   }
