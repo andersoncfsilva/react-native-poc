@@ -1,54 +1,53 @@
 import React, { Component } from 'react';
-import { Container, Header, Content, List, ListItem, Text } from 'native-base';
-import { ActivityIndicator, View, ListView, RefreshControl } from 'react-native'
+import { ListItem, Text, List, Content } from 'native-base';
+import { View, RefreshControl } from 'react-native'
 import CampaignsService from '../../network/CampaignsService';
 
 export default class Campaigns extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true,
-      dataSource: null
+      refreshing: false,
+      dataSource: []
     }
   }
 
-  onRefresh() {
-    this.state.isLoading = true;
+  _onRefresh() {
+    console.log("call refresh")
     CampaignsService.gethome((responseJson) => {
-      let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
       this.setState({
-        isLoading: false,
-        dataSource: ds.cloneWithRows(responseJson.movies),
-      }, function () {
-        // do something with new state
+        refreshing: false,
+        dataSource: responseJson.movies,
       });
     })
   }
 
   componentDidMount = () => {
-    this.onRefresh()
+    this.setState({ refreshing: true });
+    this._onRefresh()
+  }
+
+  renderRow(rowData) {
+    return (
+      <ListItem><Text>{rowData.title}, {rowData.releaseYear}</Text></ListItem>
+    )
   }
 
   render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={{ flex: 1, paddingTop: 20 }}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
-
     return (
-      <ListView
-        dataSource={this.state.dataSource}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.isLoading}
-            onRefresh={this.onRefresh.bind(this)}
-          />
-        }
-        renderRow={(rowData) => <ListItem><Text>{rowData.title}, {rowData.releaseYear}</Text></ListItem>}
-      />
+      <Content refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={() => { this.setState({ refreshing: true });
+    ; this._onRefresh()}}
+            />
+          }>
+        <List
+          
+          dataArray={this.state.dataSource}
+          renderRow={this.renderRow}
+        />
+      </Content>
     );
   }
 }
