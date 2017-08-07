@@ -1,4 +1,4 @@
-package com.dindamobile;
+package br.com.dinda;
 
 import android.app.Application;
 

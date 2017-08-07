@@ -2,6 +2,9 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorAccent">@color/md_grey_600</item>
+        <item name="colorPrimaryDark">@color/dinda_color_dark</item>
+        <item name="colorPrimary">@color/dinda_color</item>
         <item name="android:navigationBarColor">@color/dinda_color_dark</item>
     </style>
 

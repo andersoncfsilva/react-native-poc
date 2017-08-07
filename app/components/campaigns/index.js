@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
-import { ListItem, Text, List, Content } from 'native-base';
-import { View, RefreshControl } from 'react-native'
+import {
+  ListItem, Text, List,
+  Content, Card, CardItem,
+  Thumbnail, Button,
+  Icon, Left, Body, Right
+} from 'native-base';
+import { View, RefreshControl, Image } from 'react-native'
 import CampaignsService from '../../network/CampaignsService';
+import Campaign from './campaign';
 
 export default class Campaigns extends Component {
   constructor(props) {
@@ -13,11 +19,10 @@ export default class Campaigns extends Component {
   }
 
   _onRefresh() {
-    console.log("call refresh")
     CampaignsService.gethome((responseJson) => {
       this.setState({
         refreshing: false,
-        dataSource: responseJson.movies,
+        dataSource: responseJson.items,
       });
     })
   }
@@ -27,25 +32,32 @@ export default class Campaigns extends Component {
     this._onRefresh()
   }
 
-  renderRow(rowData) {
-    return (
-      <ListItem><Text>{rowData.title}, {rowData.releaseYear}</Text></ListItem>
-    )
+  _renderRow(data) {
+    if (data.campaign)
+      return ( <Campaign campaign={data.campaign} /> )
+    else if (data.banner)
+      return (
+        <ListItem><Text>{data.banner.title}, {data.banner.slug}</Text></ListItem>
+      )
+    else
+      return null
   }
 
   render() {
     return (
       <Content refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={() => { this.setState({ refreshing: true });
-    ; this._onRefresh()}}
-            />
-          }>
+        <RefreshControl
+          refreshing={this.state.refreshing}
+          onRefresh={() => {
+            this.setState({ refreshing: true });
+            this._onRefresh()
+          }}
+        />
+      }>
         <List
-          
+          style={{paddingLeft: 8, paddingRight: 8}}
           dataArray={this.state.dataSource}
-          renderRow={this.renderRow}
+          renderRow={this._renderRow}
         />
       </Content>
     );
