@@ -13,5 +13,4 @@ import {
 } from 'react-native';
 import DindaMobile from './app/index'
 
-
 AppRegistry.registerComponent('DindaMobile', () => DindaMobile);
